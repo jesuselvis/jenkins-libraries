@@ -1,10 +1,6 @@
 import commons.Constants
 
 class GitHandler {
-    // def proyect(Map param = [:]) {
-    //     def repository = param.get("repository")
-    //     def source = param.get("source")
-    //     def branch = param.get("branch")
     def Checkout(String repository, String source, String branch) {
         dir(source) {
             checkout([$class: 'GitSCM',
@@ -12,7 +8,7 @@ class GitHandler {
                       doGenerateSubmoduleConfigurations: false,
                       extensions: [],
                       submoduleCfg: [],
-                      userRemoteConfigs: [[/*credentialsId: 'git_credentials',*/ url: repository + source + '.git']]
+                      userRemoteConfigs: [[/*credentialsId: 'git_credentials',*/ url: repository]]
                      ])
         }
     }
@@ -32,11 +28,3 @@ class GitHandler {
         }
     }
 }
-
-// // Crea una instancia de CheckoutGit
-// def checkoutGit = new CheckoutGit()
-
-// // Llama a los métodos directamente según sea necesario
-// // Por ejemplo:
-// checkoutGit.proyect(repository: 'http://example.com', source: 'sourceFolder', branch: 'main')
-// checkoutGit.config(source: '.', repository: 'http://configrepo.com')
