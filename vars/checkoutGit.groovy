@@ -1,4 +1,4 @@
-import common.Constants
+import commons.Constants
 
 def call(Map param = [:]) {
     def kind = param.get("kind")

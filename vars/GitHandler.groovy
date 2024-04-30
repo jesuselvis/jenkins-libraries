@@ -1,4 +1,4 @@
-import common.Constants
+import commons.Constants
 
 class GitHandler {
     // def proyect(Map param = [:]) {

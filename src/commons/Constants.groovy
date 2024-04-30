@@ -1,5 +1,6 @@
 #!groovy
-package pe.losandes.common
+// package pe.losandes.common
+package commons
 
 class Constants {
 	public static String DEPLOY_PROJECT	= '.'
