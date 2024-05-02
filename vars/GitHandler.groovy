@@ -1,6 +1,12 @@
 import commons.Constants
 
 class GitHandler {
+    def script
+
+    GitHandler(script) {
+        this.script = script
+    }
+    
     def Checkout(String repository, String source, String branch) {
         dir(source) {
             checkout([$class: 'GitSCM',
