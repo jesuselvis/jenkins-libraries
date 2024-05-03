@@ -5,30 +5,31 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
     String access_key = "none"
     String secret_key = "none"
     String awsProviderContent = "\nprovider \"aws\" {\n\t region = \"us-east-1\"\n\taccess_key = \"${access_key}\"\n\tsecret_key = \"${secret_key}\"\n}"
-    // sh "cp -f ${backend} ${workdir}/"    
-    // dir(workdir) {
-    //     try {
-    //         // sh "echo '${awsProviderContent}' >> ${backendName}"
-    //         // new File(backendName).append(awsProviderContent)
-    //     } 
-    //     catch (Exception e) {
-    //         error("> createAwsBackend ::: Add AWS Credentials ::: ${e.message}")         
-    //     }
-    // }
+    sh "cp -f ${backend} ${workdir}/"    
+    dir(workdir) {
+        try {
+            // sh "echo '${awsProviderContent}' >> ${backendName}"
+            sh "chmod 644 ${backendName}"
+            new File(backendName).append(awsProviderContent)
+        } 
+        catch (Exception e) {
+            error("> createAwsBackend ::: Add AWS Credentials ::: ${e.message}")         
+        }
+    }
     // try {
-        // Copiar el archivo backend al directorio de trabajo y cambiar permisos
-        sh "cp -f ${backend} ${workdir}/"
+    //     // Copiar el archivo backend al directorio de trabajo y cambiar permisos
+    //     sh "cp -f ${backend} ${workdir}/"
         
-        // Define la ruta completa del archivo destino
-        String destinationFilePath = "${workdir}/${backendName}"
+    //     // Define la ruta completa del archivo destino
+    //     String destinationFilePath = "${workdir}/${backendName}"
         
-        // Ajustar permisos para permitir la escritura (opcional y de acuerdo a las necesidades)
-        sh "chmod 644 ${destinationFilePath}"
+    //     // Ajustar permisos para permitir la escritura (opcional y de acuerdo a las necesidades)
+    //     sh "chmod 644 ${destinationFilePath}"
         
-        // Abrir el archivo destino para agregar contenido de AWS
-        new File(destinationFilePath).append(awsProviderContent)
+    //     // Abrir el archivo destino para agregar contenido de AWS
+    //     new File(destinationFilePath).append(awsProviderContent)
         
-        println "Contenido de AWS agregado correctamente a ${destinationFilePath}"
+    //     println "Contenido de AWS agregado correctamente a ${destinationFilePath}"
         
     // } catch (Exception e) {
     //     // Manejar errores de permisos
