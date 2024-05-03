@@ -2,6 +2,8 @@ import commons.Constants
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.charset.StandardCharsets
+import java.nio.file.StandardCopyOption
+import java.nio.file.StandardOpenOption
 
 def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLOY) {
 
