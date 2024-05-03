@@ -25,12 +25,14 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
     String destinationPath = Paths.get(workdir, backendName).toString()
     println("workdir: ${destinationPath}")
 
-    try {           
-        Files.copy(sourceFile.toPath(), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING)   
-    } 
-    catch (Exception e) {        
-        error("> createAwsBackend ::: Error al agregar configuraciones de AWS: ${e.message}")
-    }
+    Files.copy(sourceFile.toPath(), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING) 
+
+    // try {           
+    //     Files.copy(sourceFile.toPath(), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING)   
+    // } 
+    // catch (Exception e) {        
+    //     error("> createAwsBackend ::: Error al agregar configuraciones de AWS: ${e.message}")
+    // }
 }
 
 def initialize() {
