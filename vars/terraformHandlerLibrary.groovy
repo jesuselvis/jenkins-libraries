@@ -16,15 +16,11 @@ import commons.Constants
 // }
 
 def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLOY) {
-  // Extract filename from backend path
-  String backendName = new File(backend).name
-  
-  // Combine AWS provider config with newline
+  String backendName = new File(backend).name  
   String awsProviderContent = "provider \"aws\" {\n\t region = \"us-east-1\"\n}\n"
-  sh "echo '${awsProviderContent}'"
-  // Use try-with-resource for automatic file closing and error handling
+//   sh "echo '${awsProviderContent}'"
+  println("workdir: ${workdir}, backend: ${backend}")
   try {
-    // Open files with write access
     new File(workdir, backendName).withWriter { writer ->
       writer << new File(backend).bytes // Copy backend content
       writer << awsProviderContent.bytes // Append AWS provider config
