@@ -15,7 +15,7 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
     //         error("> createAwsBackend ::: Add AWS Credentials ::: ${e.message}")         
     //     }
     // }
-    try {
+    // try {
         // Copiar el archivo backend al directorio de trabajo y cambiar permisos
         sh "cp -f ${backend} ${workdir}/"
         
@@ -30,10 +30,10 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
         
         println "Contenido de AWS agregado correctamente a ${destinationFilePath}"
         
-    } catch (Exception e) {
-        // Manejar errores de permisos
-        error("> createAwsBackend ::: Error al agregar credenciales de AWS: ${e.message}")
-    }
+    // } catch (Exception e) {
+    //     // Manejar errores de permisos
+    //     error("> createAwsBackend ::: Error al agregar credenciales de AWS: ${e.message}")
+    // }
 }
 
 def initialize(String workdir = Constants.WORKDIR_TO_DEPLOY) {
