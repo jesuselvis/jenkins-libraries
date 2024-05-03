@@ -18,7 +18,7 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
 
 def initialize(String workdir = Constants.WORKDIR_TO_DEPLOY) {
     dir(workdir) {
-        sh "terraform init"
+        sh "terraform init -no-color"
     }
 }
 
