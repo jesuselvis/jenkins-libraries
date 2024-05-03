@@ -9,14 +9,8 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
         '''
     sh "cp -f ${backend} ${workdir}/ || true"    
     dir(workdir) {
-        def backendFile = new File(backendName)
-        println backendName
-        if (backendFile.exists()) {
-            backendFile << awsProvider
-            println backendFile.text
-        } else {            
-            error("File ${backendName} does not exist in ${workdir}")
-        }
+        sh "echo '${awsProvider}' >> ${backenName}"
+        sh "cat ${backenName}"
     }
 }
 
