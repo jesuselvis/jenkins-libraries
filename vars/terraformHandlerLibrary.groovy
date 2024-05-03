@@ -7,15 +7,14 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
             region  = "us-east-1"
         }
         '''
-    sh "cd Develop/DataPlatform && ls -l"
-    sh "ls -l && cp -f ${backend} ${workdir}/ || true"    
+    sh "cp -f ${backend} ${workdir}/ || true"    
     dir(workdir) {
         def backendFile = new File(backendName)
         if (backendFile.exists()) {
             backendFile << awsProvider
             println backendFile.text
         } else {            
-            error("El archivo ${backendName} no existe en el directorio ${workdir}")
+            error("File ${backendName} does not exist in ${workdir}")
         }
     }
 }
