@@ -2,11 +2,12 @@ import commons.Constants
 
 def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLOY) {    
     String backendName = backend.split("/").last()
-    String awsProvider = '''
-        provider "aws" {
-            region  = "us-east-1"
-        }
-        '''    
+    // String awsProvider = '''
+    //     provider "aws" {
+    //         region  = "us-east-1"
+    //     }
+    //     '''    
+     String awsProvider = '\n provider "aws" {\n\t region = "us-east-1"\n}'   
     sh "cp -f ${backend} ${workdir}/"    
     dir(workdir) {
         try {
