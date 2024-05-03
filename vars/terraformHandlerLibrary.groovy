@@ -21,17 +21,22 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
 //   sh "echo '${awsProviderContent}'"
   println("workdir: ${workdir}, backend: ${backend}")
   File destinationFile = new File(workdir, backendName)
+    
     try {
-        // Abrir el archivo destino en modo de escritura
-        destinationFile.withWriter { writer ->
-            // Copiar el contenido del archivo backend
-            new File(backend).withInputStream { inputStream ->
-                writer << inputStream
-            }
-
-            // Agregar el contenido del proveedor AWS
-            writer << awsProviderContent
+        // Copiar el archivo backend.tf al directorio de trabajo
+        Files.copy(Paths.get(backend), Paths.get(workdir, backendName), StandardCopyOption.REPLACE_EXISTING)
+        
+        // Verificar que el archivo ha sido copiado
+        if (!destinationFile.exists()) {
+            throw new RuntimeException("No se pudo copiar el archivo backend.tf a workDirToDeploy.")
         }
+        
+        // Abrir el archivo destino en modo de escritura para agregar el contenido adicional
+        destinationFile.withWriterAppend { writer ->
+            writer.write(awsProviderContent)
+        }
+        
+        println "Archivo '${backendName}' copiado y contenido de AWS añadido correctamente a ${workdir}."
         
     } catch (Exception e) {
         // Manejar excepciones y mostrar el mensaje de error
