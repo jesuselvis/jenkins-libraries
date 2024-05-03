@@ -17,9 +17,9 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
     //     error("El archivo ${backend} no existe.")
     // }
 
-    Files.copy(backend, Paths.get(workDir, backendName))
+    Files.copy(backend, Paths.get(workdir, backendName))
 
-    File destinationFile = new File(workDir, backendName)
+    File destinationFile = new File(workdir, backendName)
     
     destinationFile.withWriterAppend('UTF-8') { writer ->
         writer.writeLine(awsProvider)
