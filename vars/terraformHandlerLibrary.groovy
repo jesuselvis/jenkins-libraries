@@ -6,11 +6,11 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
     String secret_key = "none"
     String awsProviderContent = "\nprovider \"aws\" {\n\t region = \"us-east-1\"\n\taccess_key = \"${access_key}\"\n\tsecret_key = \"${secret_key}\"\n}"
     sh "cp -f ${backend} ${workdir}/"    
+    sh(script: "tu_comando_a_ejecutar", returnStatus: true)
+
     dir(workdir) {
         try {
-            // sh "echo '${awsProviderContent}' >> ${backendName}"
-            sh "chmod 644 ${backendName}"
-            new File(backendName).append(awsProviderContent)
+            sh "echo '${awsProviderContent}' >> ${backendName}"
         } 
         catch (Exception e) {
             error("> createAwsBackend ::: Add AWS Credentials ::: ${e.message}")         
