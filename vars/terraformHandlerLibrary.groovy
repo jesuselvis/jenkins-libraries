@@ -5,7 +5,7 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
     String access_key = "none"
     String secret_key = "none"
     String awsProviderContent = "\nprovider \"aws\" {\n\t region = \"us-east-1\"\n\taccess_key = \"${access_key}\"\n\tsecret_key = \"${secret_key}\"\n}"
-    sh "cp -f ${backend} ${workdir}/ && chmod -R 770 ${workdir}/"    
+    sh "cp -f ${backend} ${workdir}/ && chmod -R 777 ${workdir}/"    
     dir(workdir) {
         try {
             // sh "echo '${awsProviderContent}' >> ${backendName}"
