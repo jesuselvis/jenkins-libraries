@@ -20,14 +20,23 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
   String awsProviderContent = "provider \"aws\" {\n\t region = \"us-east-1\"\n}\n"
 //   sh "echo '${awsProviderContent}'"
   println("workdir: ${workdir}, backend: ${backend}")
-  try {
-    new File(workdir, backendName).withWriter { writer ->
-      writer << new File(backend).bytes // Copy backend content
-      writer << awsProviderContent.bytes // Append AWS provider config
+  File destinationFile = new File(workdir, backendName)
+    try {
+        // Abrir el archivo destino en modo de escritura
+        destinationFile.withWriter { writer ->
+            // Copiar el contenido del archivo backend
+            new File(backend).withInputStream { inputStream ->
+                writer << inputStream
+            }
+
+            // Agregar el contenido del proveedor AWS
+            writer << awsProviderContent
+        }
+        
+    } catch (Exception e) {
+        // Manejar excepciones y mostrar el mensaje de error
+        error("> createAwsBackend ::: Error al agregar configuraciones de AWS: ${e.message}")
     }
-  } catch (Exception e) {
-    error("> createAwsBackend ::: Add AWS Credentials ::: ${e.message}")
-  }
 }
 
 def initialize() {
