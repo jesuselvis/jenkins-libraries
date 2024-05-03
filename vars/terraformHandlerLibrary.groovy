@@ -1,8 +1,5 @@
 import commons.Constants
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
-import java.nio.charset.StandardCharsets
+import java.nio.file.*
 
 // def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLOY) {    
 //     String backendName = backend.split("/").last()      
@@ -20,30 +17,18 @@ import java.nio.charset.StandardCharsets
 // }
 
 def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLOY) {
-  String backendName = new File(backend).name  
-  String awsProviderContent = "provider \"aws\" {\n\t region = \"us-east-1\"\n}\n"
-//   sh "echo '${awsProviderContent}'"
-  println("workdir: ${workdir}, backend: ${backend}")
-  File destinationFile = new File(workdir, backendName)
+    String backendName = new File(backend).name  
+    String awsProviderContent = "provider \"aws\" {\n\t region = \"us-east-1\"\n}\n"
+    println("workdir: ${workdir}, backend: ${backend}")
     
-    try {
-        // Copiar el archivo backend.tf al directorio de trabajo
-        Files.copy(Paths.get(backend), Paths.get(workdir, backendName), StandardCopyOption.REPLACE_EXISTING)
-        
-        // Verificar que el archivo ha sido copiado
-        if (!destinationFile.exists()) {
-            throw new RuntimeException("No se pudo copiar el archivo backend.tf a workDirToDeploy.")
-        }
-        
-        // Abrir el archivo destino en modo de escritura para agregar el contenido adicional
-        destinationFile.withWriterAppend { writer ->
-            writer.write(awsProviderContent)
-        }
-        
-        println "Archivo '${backendName}' copiado y contenido de AWS añadido correctamente a ${workdir}."
-        
-    } catch (Exception e) {
-        // Manejar excepciones y mostrar el mensaje de error
+    def sourceFile = new File(backend)
+    String destinationPath = Paths.get(workdir, backendName).toString()
+    println("workdir: ${destinationPath}")
+
+    try {           
+        Files.copy(sourceFile.toPath(), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING)   
+    } 
+    catch (Exception e) {        
         error("> createAwsBackend ::: Error al agregar configuraciones de AWS: ${e.message}")
     }
 }
