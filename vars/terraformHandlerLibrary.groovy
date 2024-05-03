@@ -9,8 +9,8 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
         '''
     sh "cp -f ${backend} ${workdir}/ || true"    
     dir(workdir) {
-        sh "ls -l"
-        // sh "echo '${awsProvider}' >> ${backenName}"
+        // sh "ls -l"
+        sh "echo '${awsProvider}' >> ${backenName}"
         //sh "cat ${backenName}"
     }
 }
