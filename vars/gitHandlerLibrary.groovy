@@ -1,6 +1,6 @@
 import commons.Constants
 
-def checkout(String repository, String source, String branch) {
+def checkout(String repository, String branch, String source = Constants.DEPLOY_WORKDIR) {
     dir(source) {
         checkout([$class: 'GitSCM',
                       branches: [[name: "${branch}"]],
