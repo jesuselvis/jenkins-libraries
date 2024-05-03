@@ -20,7 +20,7 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
         Files.copy(Paths.get(backend), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING)        
         // Añadir el bloque de proveedor AWS al archivo de backend
         Files.write(Paths.get(destinationPath), awsProvider.bytes, StandardOpenOption.APPEND)
-        sh "cat ${destinationPath}"     
+        // sh "cat ${destinationPath}"     
     } catch (Exception e) {
         error("Error agregando credenciales AWS: ${e.message}")
     }
