@@ -1,47 +1,20 @@
 import commons.Constants
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.charset.StandardCharsets
 
-def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLOY) {
-    // Extraer el nombre del archivo backend
+def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLOY) {    
     String backendName = backend.split("/").last()
-    
-    // Definir la configuración de AWS
     String awsProvider = '''
         provider "aws" {
-            region = "us-east-1"
+            region  = "us-east-1"
         }
-    '''
-
-    // Crear el directorio de trabajo si no existe
-    def workDirPath = Paths.get(workdir)
-    if (!Files.exists(workDirPath)) {
-        Files.createDirectories(workDirPath)
-    }
-    
-    // Copiar el archivo backend al directorio de trabajo
-    def sourcePath = Paths.get(backend)
-    def destinationPath = workDirPath.resolve(backendName)
-    
-    // Copia el archivo backend al directorio de trabajo
-    try {
-        Files.copy(sourcePath, destinationPath)
-    } catch (Exception e) {
-        println "Error copiando el archivo backend: ${e.message}"
-        return
-    }
-    
-    // Añadir la configuración de AWS al archivo backend
-    if (Files.exists(destinationPath)) {
+        '''
+    sh "cp -f ${backend} ${workdir}/"    
+    dir(workdir) {
         try {
-            def existingContent = new String(Files.readAllBytes(destinationPath), StandardCharsets.UTF_8)
-            Files.write(destinationPath, (existingContent + awsProvider).getBytes(StandardCharsets.UTF_8))
-        } catch (Exception e) {
-            println "Error escribiendo en el archivo backend: ${e.message}"
+            sh " echo '${awsProvider}' >> ${backenName}"
+        } 
+        catch (Exception e) {
+            error("Error agregando credenciales AWS: ${e.message}")            
         }
-    } else {
-        println "El archivo backend ${backendName} no existe en ${workdir}"
     }
 }
 
