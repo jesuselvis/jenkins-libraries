@@ -1,4 +1,6 @@
 import commons.Constants
+import java.nio.file.Files
+import java.nio.file.Paths
 
 def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLOY) {    
     String backendName = backend.split("/").last()
@@ -7,12 +9,23 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
             region  = "us-east-1"
         }
         '''
-    sh "cp -f ${backend} ${workdir}/ || true"    
-    dir(workdir) {
-        // sh "ls -l"
-        sh "echo '${awsProvider}' >> ${backenName}"
-        //sh "cat ${backenName}"
+    
+    File backendFile = new File(backend)
+    File workDir = new File(workdir)
+    
+    if (!backendFile.exists()) {
+        throw new FileNotFoundException("El archivo ${backend} no existe.")
     }
+
+    Files.copy(backendFile.toPath(), Paths.get(workDir, backendName))
+
+    File destinationFile = new File(workDir, backendName)
+    
+    destinationFile.withWriterAppend('UTF-8') { writer ->
+        writer.writeLine(awsProvider)
+    }
+
+    println destinationFile.text
 }
 
 def initialize() {
