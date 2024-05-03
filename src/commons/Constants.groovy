@@ -4,7 +4,7 @@ package commons
 class Constants {
 	public static String DEPLOY_PROJECT	= '.'
 	public static String REPO_CONFIG	= ''
-	public static String DEPLOY_WORKDIR	= 'ToDeploy'
+	public static String WORKDIR_TO_DEPLOY	= 'workDirToDeploy'
     
     public static Map GIT_PIPELINE_BRANCHES = [ dev 	: 	'dev',
     										test  	    : 	'test',
