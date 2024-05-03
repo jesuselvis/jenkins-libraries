@@ -1,12 +1,14 @@
 import commons.Constants
 
 def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLOY) {    
-    String backendName = new File(backend).name  
-    String awsProviderContent = "\nprovider \"aws\" {\n\t region = \"us-east-1\"\n}"
+    String backendName = new File(backend).name
+    String access_key = "none"
+    String secret_key = "none"
+    String awsProviderContent = "\nprovider \"aws\" {\n\t region = \"us-east-1\"\n\taccess_key = \"${access_key}\"\n\tsecret_key = \"${secret_key}\"\n}"
     sh "cp -f ${backend} ${workdir}/"    
     dir(workdir) {
         try {
-            sh "echo '${awsProviderContent}' >> ${backendName} && cat ${backendName}"
+            sh "echo '${awsProviderContent}' >> ${backendName}"
         } 
         catch (Exception e) {
             error("> createAwsBackend ::: Add AWS Credentials ::: ${e.message}")         
@@ -14,8 +16,10 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
     }
 }
 
-def initialize() {
-    // Code to initialize Terraform
+def initialize(String workdir = Constants.WORKDIR_TO_DEPLOY) {
+    dir(workdir) {
+        sh "terraform init"
+    }
 }
 
 def plan() {
