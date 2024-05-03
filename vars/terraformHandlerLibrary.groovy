@@ -6,7 +6,13 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
     String secret_key = "none"
     String awsProviderContent = "\nprovider \"aws\" {\n\t region = \"us-east-1\"\n\taccess_key = \"${access_key}\"\n\tsecret_key = \"${secret_key}\"\n}"
     sh "cp -f ${backend} ${workdir}/"    
-    sh(script: "tu_comando_a_ejecutar", returnStatus: true)
+    sh(script: "echo '${awsProviderContent}'", returnStatus: true)
+
+    def result = sh(script: "echo 'This is a secret command ${awsProviderContent}'", returnStdout: true).trim()
+
+    withEnv(['JENKINS_LOG_LEVEL=OFF']) {
+        sh "echo 'This will not be logged ${awsProviderContent}'"
+    }
 
     dir(workdir) {
         try {
