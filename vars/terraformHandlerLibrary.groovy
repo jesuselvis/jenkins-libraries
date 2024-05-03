@@ -10,14 +10,14 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
         }
         '''
     
-    File backendFile = new File(backend)
-    File workDir = new File(workdir)
+    // File backendFile = new File(backend)
+    // File workDir = new File(workdir)
     
-    if (!backendFile.exists()) {
-        error("El archivo ${backend} no existe.")
-    }
+    // if (!backendFile.exists()) {
+    //     error("El archivo ${backend} no existe.")
+    // }
 
-    Files.copy(backendFile.toPath(), Paths.get(workDir, backendName))
+    Files.copy(backend, Paths.get(workDir, backendName))
 
     File destinationFile = new File(workDir, backendName)
     
