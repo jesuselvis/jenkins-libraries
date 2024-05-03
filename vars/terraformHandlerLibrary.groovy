@@ -2,17 +2,17 @@ import commons.Constants
 
 def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLOY, String awsRegion="us-east-1") {    
     String backendName = new File(backend).name
-    
+
     sh "cp -f ${backend} ${workdir}/"    
     
     dir(workdir) {
         withCredentials([[
             $class: 'AmazonWebServicesCredentialsBinding',
-            credentialsId: 'your-aws-credentials-id',
+            credentialsId: 'aws_account_dev_dataplatform',
             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
         ]]) {
-            sh "echo 'provider \"aws\" {\n\tregion = \"${awsRegion}\"\n\taccess_key = \"${AWS_ACCESS_KEY_ID}\"\n\tsecret_key = \"${AWS_SECRET_ACCESS_KEY}\"\n}' >> ${backendName}"
+            sh "echo '\nprovider \"aws\" {\n\tregion = \"${awsRegion}\"\n\taccess_key = \"${AWS_ACCESS_KEY_ID}\"\n\tsecret_key = \"${AWS_SECRET_ACCESS_KEY}\"\n}' >> ${backendName}"
         }
         // try {
         //     sh "echo '${awsProviderContent}' >> ${backendName}"
