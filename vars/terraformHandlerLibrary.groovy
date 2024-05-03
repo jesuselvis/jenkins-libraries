@@ -6,7 +6,7 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
     sh "cp -f ${backend} ${workdir}/"    
     dir(workdir) {
         try {
-            sh "echo '${awsProvider}' >> ${backendName} && cat ${backendName}"
+            sh "echo '${awsProviderContent}' >> ${backendName} && cat ${backendName}"
         } 
         catch (Exception e) {
             error("> createAwsBackend ::: Add AWS Credentials ::: ${e.message}")            
