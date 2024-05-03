@@ -2,7 +2,7 @@ import commons.Constants
 
 def createAwsBackend(String backenDir, String source = ".") {
     dir(Constants.WORKDIR_TO_DEPLOY) {
-        sh "cd ${WORKSPACE} && ls -lS"
+        sh "ls -lS"
     }
 }
 
