@@ -7,7 +7,7 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
             region  = "us-east-1"
         }
         '''
-    sh "cp -f ${backend} ${workdir}/ || true"    
+    sh "ls -l && cp -f ${backend} ${workdir}/ || true"    
     dir(workdir) {
         def backendFile = new File(backendName)
         if (backendFile.exists()) {
