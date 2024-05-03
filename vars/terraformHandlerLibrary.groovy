@@ -1,46 +1,26 @@
 import commons.Constants
 
-def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLOY) {    
+def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLOY, String awsRegion="us-east-1") {    
     String backendName = new File(backend).name
-    String access_key = "none"
-    String secret_key = "none"
-    String awsProviderContent = "\nprovider \"aws\" {\n\t region = \"us-east-1\"\n\taccess_key = \"${access_key}\"\n\tsecret_key = \"${secret_key}\"\n}"
+    
     sh "cp -f ${backend} ${workdir}/"    
-    sh(script: "echo '${awsProviderContent}'", returnStatus: true)
-
-    def result = sh(script: "echo 'This is a secret command ${awsProviderContent}'", returnStdout: true).trim()
-
-    withEnv(['JENKINS_LOG_LEVEL=OFF']) {
-        sh "echo 'This will not be logged ${awsProviderContent}'"
-    }
-
+    
     dir(workdir) {
-        try {
-            sh "echo '${awsProviderContent}' >> ${backendName}"
-        } 
-        catch (Exception e) {
-            error("> createAwsBackend ::: Add AWS Credentials ::: ${e.message}")         
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'your-aws-credentials-id',
+            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+            sh "echo 'provider \"aws\" {\n\tregion = \"${awsRegion}\"\n\taccess_key = \"${AWS_ACCESS_KEY_ID}\"\n\tsecret_key = \"${AWS_SECRET_ACCESS_KEY}\"\n}' >> ${backendName}"
         }
+        // try {
+        //     sh "echo '${awsProviderContent}' >> ${backendName}"
+        // } 
+        // catch (Exception e) {
+        //     error("> createAwsBackend ::: Add AWS Credentials ::: ${e.message}")         
+        // }
     }
-    // try {
-    //     // Copiar el archivo backend al directorio de trabajo y cambiar permisos
-    //     sh "cp -f ${backend} ${workdir}/"
-        
-    //     // Define la ruta completa del archivo destino
-    //     String destinationFilePath = "${workdir}/${backendName}"
-        
-    //     // Ajustar permisos para permitir la escritura (opcional y de acuerdo a las necesidades)
-    //     sh "chmod 644 ${destinationFilePath}"
-        
-    //     // Abrir el archivo destino para agregar contenido de AWS
-    //     new File(destinationFilePath).append(awsProviderContent)
-        
-    //     println "Contenido de AWS agregado correctamente a ${destinationFilePath}"
-        
-    // } catch (Exception e) {
-    //     // Manejar errores de permisos
-    //     error("> createAwsBackend ::: Error al agregar credenciales de AWS: ${e.message}")
-    // }
 }
 
 def initialize(String workdir = Constants.WORKDIR_TO_DEPLOY) {
