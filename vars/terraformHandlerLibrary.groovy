@@ -14,12 +14,6 @@ def createAwsBackend(String backend, String workdir = Constants.WORKDIR_TO_DEPLO
         ]]) {
             sh "echo '\nprovider \"aws\" {\n\tregion = \"${awsRegion}\"\n\taccess_key = \"${AWS_ACCESS_KEY_ID}\"\n\tsecret_key = \"${AWS_SECRET_ACCESS_KEY}\"\n}' >> ${backendName}"
         }
-        // try {
-        //     sh "echo '${awsProviderContent}' >> ${backendName}"
-        // } 
-        // catch (Exception e) {
-        //     error("> createAwsBackend ::: Add AWS Credentials ::: ${e.message}")         
-        // }
     }
 }
 
