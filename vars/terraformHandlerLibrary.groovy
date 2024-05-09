@@ -21,6 +21,7 @@ def initialize(String _workdir = Constants.WORKDIR_TO_DEPLOY) {
 }
 
 def plan(String _workdir = Constants.WORKDIR_TO_DEPLOY) {
+    sh "cd Develop/DataPlatform && ls -l"
     String rutaArchivoYAML = 'Develop/DataPlatform/env.yml'
     Yaml yaml = new Yaml()
     def contenidoYAML = new File(rutaArchivoYAML).text
