@@ -1,5 +1,4 @@
 import commons.Constants
-import org.yaml.snakeyaml.Yaml
 
 def createAwsBackend(String _bucketKey, String _environment, String _awsRegion="us-east-1", String _workdir = Constants.WORKDIR_TO_DEPLOY) {
     dir(_workdir) {
@@ -21,14 +20,25 @@ def initializeAws(String _workdir = Constants.WORKDIR_TO_DEPLOY) {
 }
 
 def planAws(String _accountToDeploy, String _ymlFile, String _awsRegion="us-east-1", String _workdir = Constants.WORKDIR_TO_DEPLOY) {
-    Yaml yaml = new Yaml()
-    def contenidoYAML = new File(WORKSPACE+'/'+_ymlFile).text
-    def variables = yaml.load(contenidoYAML)
+    // Yaml yaml = new Yaml()
+    // def contenidoYAML = new File(WORKSPACE+'/'+_ymlFile).text
+    // def variables = yaml.load(contenidoYAML)
+    // String comandoTerraform = ''
+    // variables.each { clave, valor ->
+    //     comandoTerraform += " -var=\"${clave}=${valor}\""
+    // }
+    def variables
+    def contenidoYAML = new File(WORKSPACE + '/' + _ymlFile).text
+    
+    // Lee y carga las variables de YAML localmente
+    variables = new org.yaml.snakeyaml.Yaml().load(contenidoYAML)
+    
+    // Construye el comando Terraform utilizando las variables
     String comandoTerraform = ''
     variables.each { clave, valor ->
         comandoTerraform += " -var=\"${clave}=${valor}\""
     }
-    // sh "echo \" ${comandoTerraform}\""
+    
     dir(_workdir) {
         withCredentials([[
             $class: 'AmazonWebServicesCredentialsBinding',
