@@ -41,6 +41,24 @@ def planAws(String _accountToDeploy, String _ymlFile, String _awsRegion="us-east
     }
 }
 
-def applyAws() {
-    // Code to apply Terraform changes
+def applyAws(String _accountToDeploy, String _ymlFile, String _awsRegion="us-east-1", String _workdir = Constants.WORKDIR_TO_DEPLOY) {    
+    def variables
+    def contenidoYAML = new File(WORKSPACE + '/' + _ymlFile).text
+    variables = new org.yaml.snakeyaml.Yaml().load(contenidoYAML)
+    
+    String comandoTerraform = ''
+    variables.each { clave, valor ->
+        comandoTerraform += " -var=\"${clave}=${valor}\""
+    }
+    
+    dir(_workdir) {
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: Constants.AWS_ACCOUNTS_CREDENTIALS[_accountToDeploy],
+            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+            sh "terraform apply --auto-approve -no-color -var=\"iac_aws_region=${_awsRegion}\" -var=\"iac_aws_access_key=${AWS_ACCESS_KEY_ID}\" -var=\"iac_aws_secret_key=${AWS_SECRET_ACCESS_KEY}\""+comandoTerraform            
+        }
+    }
 }
