@@ -21,10 +21,10 @@ def initialize(String _workdir = Constants.WORKDIR_TO_DEPLOY) {
 }
 
 def plan(String _workdir = Constants.WORKDIR_TO_DEPLOY) {
-    sh "cd Develop/DataPlatform && ls -l"
+    sh "cd ${WORKDIR}/Develop/DataPlatform && ls -l"
     String rutaArchivoYAML = 'Develop/DataPlatform/env.yml'
     Yaml yaml = new Yaml()
-    def contenidoYAML = new File(rutaArchivoYAML).text
+    def contenidoYAML = new File(WORKDIR+'/'+rutaArchivoYAML).text
     def variables = yaml.load(contenidoYAML)
     def comandoTerraform = 'terraform plan'
     variables.each { clave, valor ->
