@@ -1,7 +1,7 @@
 import commons.Constants
 import org.yaml.snakeyaml.Yaml
 
-def createAwsBackend(String _bucketKey, String _environment, String _awsRegion="us-east-1",String _workdir = Constants.WORKDIR_TO_DEPLOY) {
+def createAwsBackend(String _bucketKey, String _environment, String _awsRegion="us-east-1", String _workdir = Constants.WORKDIR_TO_DEPLOY) {
     dir(_workdir) {
         withCredentials([[
             $class: 'AmazonWebServicesCredentialsBinding',
@@ -14,32 +14,33 @@ def createAwsBackend(String _bucketKey, String _environment, String _awsRegion="
     }
 }
 
-def initialize(String _workdir = Constants.WORKDIR_TO_DEPLOY) {
+def initializeAws(String _workdir = Constants.WORKDIR_TO_DEPLOY) {
     dir(_workdir) {
         sh "terraform init -no-color"
     }
 }
 
-def plan(String _workdir = Constants.WORKDIR_TO_DEPLOY) {
-    sh "cd ${WORKSPACE}/Develop/DataPlatform && ls -l"
-    String rutaArchivoYAML = 'Develop/DataPlatform/env.yml'
+def planAws(String _accountToDeploy, String _ymlFile, String _awsRegion="us-east-1", String _workdir = Constants.WORKDIR_TO_DEPLOY) {
     Yaml yaml = new Yaml()
-    def contenidoYAML = new File(WORKSPACE+'/'+rutaArchivoYAML).text
+    def contenidoYAML = new File(WORKSPACE+'/'+_ymlFile).text
     def variables = yaml.load(contenidoYAML)
-    def comandoTerraform = 'terraform plan'
+    String comandoTerraform = ''
     variables.each { clave, valor ->
         comandoTerraform += " -var=\"${clave}=${valor}\""
     }
-    println("Comando Terraform plan construido: ${comandoTerraform}")
-    // dir(_workdir) {
-    //     sh "terraform plan -no-color"
-    // }
+    
+    dir(_workdir) {
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: Constants.AWS_ACCOUNTS_CREDENTIALS[_accountToDeploy],
+            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+            sh "terraform plan -no-color -var=\"iac_aws_region=${_awsRegion}\" -var=\"iac_aws_access_key=${AWS_ACCESS_KEY_ID}\" -var=\"iac_aws_secret_key=${AWS_SECRET_ACCESS_KEY}\""+comandoTerraform
+        }
+    }
 }
 
-def apply() {
+def applyAws() {
     // Code to apply Terraform changes
-}
-
-def destroy() {
-    // Code to destroy Terraform resources
 }
