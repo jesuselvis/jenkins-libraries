@@ -19,21 +19,11 @@ def initializeAws(String _workdir = Constants.WORKDIR_TO_DEPLOY) {
     }
 }
 
-def planAws(String _accountToDeploy, String _ymlFile, String _awsRegion="us-east-1", String _workdir = Constants.WORKDIR_TO_DEPLOY) {
-    // Yaml yaml = new Yaml()
-    // def contenidoYAML = new File(WORKSPACE+'/'+_ymlFile).text
-    // def variables = yaml.load(contenidoYAML)
-    // String comandoTerraform = ''
-    // variables.each { clave, valor ->
-    //     comandoTerraform += " -var=\"${clave}=${valor}\""
-    // }
+def planAws(String _accountToDeploy, String _ymlFile, String _awsRegion="us-east-1", String _workdir = Constants.WORKDIR_TO_DEPLOY) {    
     def variables
     def contenidoYAML = new File(WORKSPACE + '/' + _ymlFile).text
-    
-    // Lee y carga las variables de YAML localmente
     variables = new org.yaml.snakeyaml.Yaml().load(contenidoYAML)
     
-    // Construye el comando Terraform utilizando las variables
     String comandoTerraform = ''
     variables.each { clave, valor ->
         comandoTerraform += " -var=\"${clave}=${valor}\""
@@ -46,13 +36,7 @@ def planAws(String _accountToDeploy, String _ymlFile, String _awsRegion="us-east
             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
         ]]) {
-            // sh "terraform plan -no-color -var=\"iac_aws_region=${_awsRegion}\" -var=\"iac_aws_access_key=${AWS_ACCESS_KEY_ID}\" -var=\"iac_aws_secret_key=${AWS_SECRET_ACCESS_KEY}\""+comandoTerraform
-            try {
-                sh "terraform plan -no-color -var=\"iac_aws_region=${_awsRegion}\" -var=\"iac_aws_access_key=${AWS_ACCESS_KEY_ID}\" -var=\"iac_aws_secret_key=${AWS_SECRET_ACCESS_KEY}\"" + comandoTerraform
-            } catch (Exception e) {
-                println("Error durante la ejecución de terraform plan: ${e.message}")
-                // Realiza las acciones necesarias para manejar el error (por ejemplo, detener el pipeline o registrar el error).
-            }
+            sh "terraform plan -no-color -var=\"iac_aws_region=${_awsRegion}\" -var=\"iac_aws_access_key=${AWS_ACCESS_KEY_ID}\" -var=\"iac_aws_secret_key=${AWS_SECRET_ACCESS_KEY}\""+comandoTerraform            
         }
     }
 }
