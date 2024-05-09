@@ -28,17 +28,17 @@ def planAws(String _accountToDeploy, String _ymlFile, String _awsRegion="us-east
     variables.each { clave, valor ->
         comandoTerraform += " -var=\"${clave}=${valor}\""
     }
-    sh "echo \" ${comandoTerraform}\""
-    // dir(_workdir) {
-    //     withCredentials([[
-    //         $class: 'AmazonWebServicesCredentialsBinding',
-    //         credentialsId: Constants.AWS_ACCOUNTS_CREDENTIALS[_accountToDeploy],
-    //         accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-    //         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-    //     ]]) {
-    //         sh "terraform plan -no-color -var=\"iac_aws_region=${_awsRegion}\" -var=\"iac_aws_access_key=${AWS_ACCESS_KEY_ID}\" -var=\"iac_aws_secret_key=${AWS_SECRET_ACCESS_KEY}\""+comandoTerraform
-    //     }
-    // }
+    // sh "echo \" ${comandoTerraform}\""
+    dir(_workdir) {
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: Constants.AWS_ACCOUNTS_CREDENTIALS[_accountToDeploy],
+            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+            sh "terraform plan -no-color -var=\"iac_aws_region=${_awsRegion}\" -var=\"iac_aws_access_key=${AWS_ACCESS_KEY_ID}\" -var=\"iac_aws_secret_key=${AWS_SECRET_ACCESS_KEY}\""+comandoTerraform
+        }
+    }
 }
 
 def applyAws() {

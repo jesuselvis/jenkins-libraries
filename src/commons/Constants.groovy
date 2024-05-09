@@ -9,5 +9,6 @@ class Constants {
 	public static Map TF_STATES_CREDENTIALS_ID = [	develop 	: 	'AWS_TFSTATES__BACKEND_ACCOUNT',
     												test  	    : 	'',
     												production	: 	'' ]
-	public static Map AWS_ACCOUNTS_CREDENTIALS = [accountDigitalDev 	: 	'aws_account_dev_dataplatform']
+	public static Map AWS_ACCOUNTS_CREDENTIALS = [accountdigitaldev 	: 	'aws_account_dev_dataplatform',
+												  otheraccount: ''	]
 }
