@@ -1,4 +1,5 @@
 import commons.Constants
+import org.yaml.snakeyaml.Yaml
 
 def createAwsBackend(String _bucketKey, String _environment, String _awsRegion="us-east-1",String _workdir = Constants.WORKDIR_TO_DEPLOY) {
     dir(_workdir) {
@@ -13,14 +14,25 @@ def createAwsBackend(String _bucketKey, String _environment, String _awsRegion="
     }
 }
 
-def initialize(String workdir = Constants.WORKDIR_TO_DEPLOY) {
-    dir(workdir) {
+def initialize(String _workdir = Constants.WORKDIR_TO_DEPLOY) {
+    dir(_workdir) {
         sh "terraform init -no-color"
     }
 }
 
-def plan() {
-    // Code to create a Terraform plan
+def plan(String _workdir = Constants.WORKDIR_TO_DEPLOY) {
+    String rutaArchivoYAML = 'Develop/DataPlatform/env.yml'
+    Yaml yaml = new Yaml()
+    def contenidoYAML = new File(rutaArchivoYAML).text
+    def variables = yaml.load(contenidoYAML)
+    def comandoTerraform = 'terraform plan'
+    variables.each { clave, valor ->
+        comandoTerraform += " -var=\"${clave}=${valor}\""
+    }
+    println("Comando Terraform plan construido: ${comandoTerraform}")
+    // dir(_workdir) {
+    //     sh "terraform plan -no-color"
+    // }
 }
 
 def apply() {
