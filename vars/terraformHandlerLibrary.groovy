@@ -36,7 +36,13 @@ def planAws(String _accountToDeploy, String _ymlFile, String _awsRegion="us-east
             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
         ]]) {
-            sh "terraform plan -no-color -var=\"iac_aws_region=${_awsRegion}\" -var=\"iac_aws_access_key=${AWS_ACCESS_KEY_ID}\" -var=\"iac_aws_secret_key=${AWS_SECRET_ACCESS_KEY}\""+comandoTerraform
+            // sh "terraform plan -no-color -var=\"iac_aws_region=${_awsRegion}\" -var=\"iac_aws_access_key=${AWS_ACCESS_KEY_ID}\" -var=\"iac_aws_secret_key=${AWS_SECRET_ACCESS_KEY}\""+comandoTerraform
+            try {
+                sh "terraform plan -no-color -var=\"iac_aws_region=${_awsRegion}\" -var=\"iac_aws_access_key=${AWS_ACCESS_KEY_ID}\" -var=\"iac_aws_secret_key=${AWS_SECRET_ACCESS_KEY}\"" + comandoTerraform
+            } catch (Exception e) {
+                println("Error durante la ejecución de terraform plan: ${e.message}")
+                // Realiza las acciones necesarias para manejar el error (por ejemplo, detener el pipeline o registrar el error).
+            }
         }
     }
 }
